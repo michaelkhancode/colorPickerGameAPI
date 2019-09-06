@@ -1,0 +1,30 @@
+{
+  "name": "colorpickergameapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaelkhancode/colorPickerGameAPI.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/michaelkhancode/colorPickerGameAPI/issues"
+  },
+  "homepage": "https://github.com/michaelkhancode/colorPickerGameAPI#readme",
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  },
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "knex": "^0.19.3",
+    "pg": "^7.12.1"
+  }
+}
