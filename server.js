@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 //knex database query builder
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt-nodejs');
 const db = require('knex')({
     client:'pg',				
     connection: {
@@ -25,6 +25,7 @@ app.use(cors())
 //middleware
 
 const saltRounds = 10;
+var salt = bcrypt.genSaltSync(saltRounds);
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
@@ -47,7 +48,7 @@ app.put("/profile", (req,res) => {
             })
             .returning("*")
             .then(response => {
-                res.json(response)
+                res.json(response[0])
             })
             break;
         case 6:
@@ -58,7 +59,7 @@ app.put("/profile", (req,res) => {
             })
             .returning("*")
             .then(response => {
-                res.json(response)
+                res.json(response[0])
             })
             break;
         case 9:
@@ -69,7 +70,7 @@ app.put("/profile", (req,res) => {
             })
             .returning("*")
             .then(response => {
-                res.json(response)
+                res.json(response[0])
             })
             break;
         default:
@@ -77,7 +78,7 @@ app.put("/profile", (req,res) => {
             .where('email', '=', email)
             .returning("*")
             .then(response => {
-                res.json(response)
+                res.json(response[0])
             })
             break;
     }
@@ -132,7 +133,8 @@ app.post("/signin", (req,res) => {
 app.post("/register", (req,res) => {
     let { name, email, password } = req.body;
 
-    bcrypt.hash(password, saltRounds, function(err, hash) {
+    const hash = bcrypt.hashSync(password, salt);
+        
         db.insert({
             email,
             password:hash
@@ -155,7 +157,7 @@ app.post("/register", (req,res) => {
             })
         })
         .catch(er => res.status(400).json('already have that email on file'))
-    });
+    // });
 
 });
 
