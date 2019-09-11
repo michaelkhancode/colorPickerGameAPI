@@ -20,8 +20,6 @@ const db = require('knex')({
 const app       = express();
 //express server
 
-
-
 //middleware
 app.use(cors())
 //middleware
@@ -31,22 +29,87 @@ const saltRounds = 10;
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
-app.get("/", (req,res) => {
+// app.get("/", (req,res) => {
 
-    res.json( "Get Root Path" );
-});
+//     res.json( "Get Root Path" );
+// });
 
-app.get("/profile", (req,res) => {
-    const send = { path: "profile"};
-    res.json( send );
+app.put("/profile", (req,res) => {
+    // const send = { path: "put"};
+    const { difficulty, score, email, name, toptime3, toptime6, toptime9 } = req.body;
+    console.log(difficulty, score, email, name, toptime3, toptime6, toptime9)
+    switch (difficulty) {
+        case 3:
+            db('users')
+            .where('email', '=', email)
+            .update({
+                toptime3: score
+            })
+            .returning("*")
+            .then(response => {
+                res.json(response)
+            })
+            break;
+        case 6:
+            db('users')
+            .where('email', '=', email)
+            .update({
+                toptime6: score
+            })
+            .returning("*")
+            .then(response => {
+                res.json(response)
+            })
+            break;
+        case 9:
+            db('users')
+            .where('email', '=', email)
+            .update({
+                toptime9: score
+            })
+            .returning("*")
+            .then(response => {
+                res.json(response)
+            })
+            break;
+        default:
+            db('users')
+            .where('email', '=', email)
+            .returning("*")
+            .then(response => {
+                res.json(response)
+            })
+            break;
+    }
+
+    // console.log(difficulty, email, name, toptime3, toptime6, toptime9)
+    // res.json( "hi" );
 });
 
 app.get("/leaderboard", (req,res) => {
     const send = { path: "leaderboard"};
-    res.json( send );
+    
+    db('users').min( {toptime3:"toptime3", toptime6:"toptime6", toptime9:"toptime9"} )
+    .then(response => {
+        const {toptime3, toptime6, toptime9} = response[0];
+        var topDogs = [];
+        // db.select('*').from('users').where('toptime3', '=', 100)
+        db.select('*').from('users').where( {toptime3} )
+        .then(response => {
+            topDogs.push( {name:response[0].name, toptime3} )
+            db.select('*').from('users').where( {toptime6} )
+            .then(response => {
+                topDogs.push( {name:response[0].name, toptime6} )
+                db.select('*').from('users').where( {toptime9} )
+                .then(response => {
+                    topDogs.push( {name:response[0].name, toptime9} )
+                    res.json(topDogs)
+                })
+            })
+        })
+    })
 });
 
-// xoxoxo
 
 app.post("/signin", (req,res) => {
     let { email, password } = req.body;
@@ -80,7 +143,9 @@ app.post("/register", (req,res) => {
             return db.insert({
                 name,
                 email,
-                toptime: null
+                toptime3: null,
+                toptime6: null,
+                toptime9: null
             })
             .into("users")
             .returning('*')
