@@ -5,15 +5,26 @@ const cors = require('cors');
 
 //knex database query builder
 const bcrypt = require('bcrypt-nodejs');
-const db = require('knex')({
-    client:'pg',				
+
+console.log(process.env.DATABASE_URL)
+
+const db            = require('knex')({
+    client:'pg',
     connection: {
-        host : '127.0.0.1',		
-        user : 'postgres',		
-        password : 'wordpass',	
-        database : 'rgbgame'	
+        connectionString: process.env.DATABASE_URL,
+        ssl:true
     }
 });
+
+// const db = require('knex')({
+//     client:'pg',				
+//     connection: {
+//         host : '127.0.0.1',		
+//         user : 'postgres',		
+//         password : 'wordpass',	
+//         database : 'rgbgame'	
+//     }
+// });
 //imports
 
 //express server
