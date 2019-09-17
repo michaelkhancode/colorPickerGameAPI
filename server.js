@@ -30,10 +30,10 @@ var salt = bcrypt.genSaltSync(saltRounds);
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
-// app.get("/", (req,res) => {
+app.get("/", (req,res) => {
 
-//     res.json( "Get Root Path" );
-// });
+    res.json( "Youve reached the server !!" );
+});
 
 app.put("/profile", (req,res) => {
     // const send = { path: "put"};
